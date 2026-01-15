@@ -40,6 +40,8 @@ def initialize_brain():
     embeddings = OpenAIEmbeddings()
     
     # 4. Store in a Vector Database
+    # Note: In a production environment, I would save this index to disk 
+    # (using FAISS.save_local) to avoid re-embedding the PDF on every system restart.
     vector_store = FAISS.from_documents(split_docs, embeddings)
     print("Brain built!")
 
@@ -55,6 +57,7 @@ def ask_question(question_text):
         return "System Error: Brain failed to load. Check PDF file."
 
     # 1. Setup the LLM
+    # Note: Temperature set to 0 to minimize hallucinations for technical support
     llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
 
     # 2. Create the prompt template
